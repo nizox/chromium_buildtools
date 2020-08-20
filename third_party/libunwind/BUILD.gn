@@ -27,13 +27,14 @@ config("libunwind_config") {
 
 source_set("libunwind") {
   visibility = []
-  if (is_fuchsia) {
+  if (use_custom_libunwind || is_fuchsia) {
     visibility += [ "//buildtools/third_party/libc++abi" ]
   } else if (is_android) {
     visibility += [ "//services/tracing/public/cpp" ]
   }
+  defines = [ "_LIBUNWIND_USE_DLADDR=0" ]
   if (!is_component_build) {
-    defines = [ "_LIBUNWIND_DISABLE_VISIBILITY_ANNOTATIONS" ]
+    defines += [ "_LIBUNWIND_DISABLE_VISIBILITY_ANNOTATIONS" ]
   }
   include_dirs = [ "//buildtools/third_party/libunwind/trunk/include" ]
   sources = [
